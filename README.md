@@ -4,6 +4,8 @@ After installing EFF's [Rayhunter](https://www.eff.org/deeplinks/2025/03/meet-ra
 
 This documents how to cross-compile and run fbDOOM on an Orbic RC400L. It is based on [huawei-doom](https://github.com/FrenchPythonLover/huawei-doom), modified for the Orbic’s 128x128 display and input devices.
 
+https://github.com/user-attachments/assets/90db02b1-2060-4ed5-b158-71d8f031d2f1
+
 ## Hardware
 
 ```sh
@@ -161,4 +163,4 @@ On the Orbic:
     /etc/init.d/start_qt_daemon
 ```
 
-Doom will start automatically on the next reboot.
+Doom will start automatically on the next reboot. Happy hacking!
