@@ -1,0 +1,43 @@
+#!/bin/sh
+
+BOOTLOG=/tmp/doom-boot.log
+DOOMLOG=/data/doom/doom.log
+PIDFILE=/tmp/doom.pid
+
+if [ -s "$PIDFILE" ] && kill -0 "$(cat "$PIDFILE")" 2>/dev/null; then
+    exit 0
+fi
+
+echo "Doom boot hook started: $(date)" >"$BOOTLOG"
+
+(
+    echo "Waiting for Doom files and devices" >>"$BOOTLOG"
+
+    while [ ! -x /data/doom/doom ] ||
+          [ ! -r /data/doom/doom1.wad ] ||
+          [ ! -e /dev/fb0 ] ||
+          [ ! -e /dev/input/event1 ] ||
+          [ ! -e /dev/input/event2 ]; do
+        sleep 1
+    done
+
+    sleep 5
+
+    killall qt_daemon qt_process 2>/dev/null
+    killall rayhunter-daemon rayhunter_daemon 2>/dev/null
+
+    for RH_PID in $(ps | awk '/rayhunter/ && !/awk/ {print $1}'); do
+        kill -9 "$RH_PID" 2>/dev/null
+    done
+
+    echo "Starting Doom: $(date)" >>"$BOOTLOG"
+
+    cd /data/doom || exit 1
+
+    exec /bin/rootshell -c \
+        'cd /data/doom && exec ./doom -warp 1 1 -skill 2' \
+        >>"$DOOMLOG" 2>&1
+) &
+
+echo $! >"$PIDFILE"
+exit 0
